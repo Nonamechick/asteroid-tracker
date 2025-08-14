@@ -30,11 +30,11 @@ export default function AsteroidScene({ asteroids }: Props) {
     (async () => {
       if (!containerRef.current) return;
 
-      // Import three-globe dynamically (no SSR)
+      
       const Globe = (await import('three-globe')).default;
 
       const scene = new THREE.Scene();
-      scene.background = new THREE.Color(0x000010); // Dark blue background
+      scene.background = new THREE.Color(0x000010); 
 
       const camera = new THREE.PerspectiveCamera(
         60,
@@ -55,7 +55,7 @@ export default function AsteroidScene({ asteroids }: Props) {
       controls.enableDamping = true;
       controls.dampingFactor = 0.05;
 
-      // Enhanced Stars with varying sizes and colors
+      
       const starGeometry = new THREE.BufferGeometry();
       const starMaterial = new THREE.PointsMaterial({
         color: 0xffffff,
@@ -69,17 +69,16 @@ export default function AsteroidScene({ asteroids }: Props) {
       const starColors = [];
       
       for (let i = 0; i < 10000; i++) {
-        // Position
         starVertices.push(
           (Math.random() - 0.5) * 4000,
           (Math.random() - 0.5) * 4000,
           (Math.random() - 0.5) * 4000
         );
         
-        // Size variation
+        
         starSizes.push(Math.random() * 1.5);
         
-        // Color variation (slightly blue/red tinted stars)
+        
         const colorVariation = Math.random() * 0.3;
         starColors.push(
           0.9 + colorVariation,
@@ -98,7 +97,7 @@ export default function AsteroidScene({ asteroids }: Props) {
       const starPoints = new THREE.Points(starGeometry, starMaterial);
       scene.add(starPoints);
 
-      // Enhanced Lighting
+      
       scene.add(new THREE.AmbientLight(0x404040, 0.5));
       
       const sunlight = new THREE.DirectionalLight(0xffffff, 1.5);
@@ -108,12 +107,12 @@ export default function AsteroidScene({ asteroids }: Props) {
       sunlight.shadow.mapSize.height = 2048;
       scene.add(sunlight);
       
-      // Add fill light
+      
       const fillLight = new THREE.DirectionalLight(0xffffff, 0.5);
       fillLight.position.set(-100, -50, -100);
       scene.add(fillLight);
 
-      // Earth with atmosphere glow
+      
       const globe = new Globe()
         .globeImageUrl('//unpkg.com/three-globe/example/img/earth-blue-marble.jpg')
         .bumpImageUrl('//unpkg.com/three-globe/example/img/earth-topology.png')
@@ -122,10 +121,10 @@ export default function AsteroidScene({ asteroids }: Props) {
       globe.scale.set(100, 100, 100);
       scene.add(globe);
 
-      // Improved Asteroids with procedural generation
+      
       const asteroidGroup = new THREE.Group();
       
-      // Load textures only once
+      
       const textureLoader = new THREE.TextureLoader();
       const rockTextures = [
         textureLoader.load('https://threejs.org/examples/textures/planets/moon_1024.jpg'),
@@ -139,7 +138,7 @@ export default function AsteroidScene({ asteroids }: Props) {
         textureLoader.load('https://threejs.org/examples/textures/terrain/rock_03_normal.jpg')
       ];
       
-      // Create a pool of materials to add variation
+      
       const materials = rockTextures.map((tex, i) => {
         return new THREE.MeshStandardMaterial({
           map: tex,
@@ -159,9 +158,9 @@ export default function AsteroidScene({ asteroids }: Props) {
         const radius = Math.max(
           asteroid.estimated_diameter.meters.estimated_diameter_min,
           asteroid.estimated_diameter.meters.estimated_diameter_max
-        ) / 200; // scale down
+        ) / 200; 
         
-        // Choose random base geometry
+        
         let baseGeometry;
         const geoType = Math.floor(Math.random() * 3);
         
@@ -177,7 +176,7 @@ export default function AsteroidScene({ asteroids }: Props) {
             break;
         }
         
-        // Apply more sophisticated noise for realistic shapes
+        
         const positionAttribute = baseGeometry.attributes.position;
         const originalPositions = positionAttribute.array.slice();
         
@@ -186,7 +185,7 @@ export default function AsteroidScene({ asteroids }: Props) {
           const y = positionAttribute.getY(i);
           const z = positionAttribute.getZ(i);
           
-          // Use Perlin-like noise for more natural deformations
+         
           const noiseIntensity = 0.3 + Math.random() * 0.2;
           const noiseX = (Math.random() - 0.5) * radius * noiseIntensity;
           const noiseY = (Math.random() - 0.5) * radius * noiseIntensity;
@@ -200,7 +199,7 @@ export default function AsteroidScene({ asteroids }: Props) {
           );
         }
         
-        // Add some craters
+       
         for (let i = 0; i < 5; i++) {
           const craterPos = new THREE.Vector3(
             (Math.random() - 0.5) * 2 * radius,
@@ -227,14 +226,14 @@ export default function AsteroidScene({ asteroids }: Props) {
         
         baseGeometry.computeVertexNormals();
         
-        // Random material from our pool
+        
         const material = materials[Math.floor(Math.random() * materials.length)];
         
         const asteroidMesh = new THREE.Mesh(baseGeometry, material);
         asteroidMesh.castShadow = true;
         asteroidMesh.receiveShadow = true;
         
-        // Position in a ring around Earth
+        
         const angle = Math.random() * Math.PI * 2;
         const distance = 150 + Math.random() * 100;
         asteroidMesh.position.set(
@@ -243,7 +242,7 @@ export default function AsteroidScene({ asteroids }: Props) {
           Math.sin(angle) * distance
         );
         
-        // Random rotation and rotation speed
+       
         asteroidMesh.rotation.set(
           Math.random() * Math.PI * 2,
           Math.random() * Math.PI * 2,
@@ -278,19 +277,19 @@ export default function AsteroidScene({ asteroids }: Props) {
       };
       window.addEventListener('click', onClick);
 
-      // Animate
+      
       const clock = new THREE.Clock();
       function animate() {
         const dt = clock.getDelta();
         
-        // Rotate asteroids individually
+        
         asteroidGroup.children.forEach(asteroid => {
           asteroid.rotation.x += asteroid.userData.rotationSpeed.x * dt * 60;
           asteroid.rotation.y += asteroid.userData.rotationSpeed.y * dt * 60;
           asteroid.rotation.z += asteroid.userData.rotationSpeed.z * dt * 60;
         });
         
-        // Slowly rotate the entire group
+        
         asteroidGroup.rotation.y += dt * 0.01;
         globe.rotation.y += dt * 0.005;
         
