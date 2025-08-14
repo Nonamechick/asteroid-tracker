@@ -1,36 +1,104 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Asteroid Visualization Project with Authentication
+
+![Asteroid Visualization Screenshot](https://i.postimg.cc/nzCBGRCZ/Screenshot-2025-08-14-171024.png)
+
+## Overview
+
+This interactive 3D visualization displays near-Earth asteroids with secure user authentication. Built with Next.js and Three.js, it features realistic asteroid models orbiting Earth, with Clerk handling authentication and a single optimized API endpoint for data fetching.
+
+## Key Features
+
+- **Immersive 3D Visualization**:
+  - Realistic Earth model with atmospheric effects
+  - Procedurally generated asteroids with detailed surfaces
+  - Dynamic lighting and starfield background
+
+- **Secure Authentication**:
+  - Powered by Clerk for seamless auth flows
+  - Protected routes and API endpoints
+  - User-specific asteroid favorites
+
+- **Optimized Data Flow**:
+  - Single efficient `/api/neo` endpoint
+  - Cached NASA NEO data with periodic updates
+  - Lightweight data structure for performance
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+- Node.js 22+
+- NASA API key (free from api.nasa.gov)
+- Clerk account (free tier available)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+### Installation
+1. Clone the repository
+2. Install dependencies with `npm install`
+3. Set up your `.env.local` file:
+```env
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_key_here
+CLERK_SECRET_KEY=your_secret_here
+NASA_API_KEY=your_nasa_key_here
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Running Locally
+```bash
+npm run dev
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Authentication Setup
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Create a Clerk application at [clerk.dev](https://clerk.dev)
+2. Configure your preferred authentication providers
+3. Add your Clerk keys to environment variables
+4. Customize auth pages in the `/(auth)` directory
 
-## Learn More
+## API Usage
 
-To learn more about Next.js, take a look at the following resources:
+The single `/api/neo` endpoint handles all asteroid data needs:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```javascript
+// Example fetch
+const response = await fetch('/api/neo');
+const data = await response.json();
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**Response Format**:
+```json
+{
+  "asteroids": [
+    {
+      "id": "12345",
+      "name": "Asteroid (2023 AB)",
+      "diameter": 150.5,
+      "velocity": 15.2,
+      "distance": 4500000
+    }
+  ],
+  "timestamp": "2023-11-15T12:00:00Z"
+}
+```
 
-## Deploy on Vercel
+## Deployment
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Recommended: Vercel
+1. Import your repository
+2. Add all environment variables
+3. Enable Clerk's authentication proxy
+4. Deploy!
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Other Platforms
+Ensure you:
+- Configure HTTPS
+- Set proper redirect URLs in Clerk
+- Implement caching for the API endpoint
+
+## Contributing
+
+We welcome contributions! Please:
+1. Fork the repository
+2. Create a feature branch
+3. Submit a pull request with clear documentation
+
+## License
+
+MIT Licensed. See LICENSE file for details.
